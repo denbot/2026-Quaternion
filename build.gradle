@@ -105,8 +105,8 @@ dependencies {
     def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
     annotationProcessor "org.littletonrobotics.akit:akit-autolog:$akitJson.version"
 
-    implementation 'bot.den.FoxFlow:foxflow:v0.9.1'
-    annotationProcessor 'bot.den.FoxFlow:foxflow-annotations:v0.9.1'
+    implementation 'bot.den.FoxFlow:foxflow:v1.0.0'
+    annotationProcessor 'bot.den.FoxFlow:foxflow-annotations:v1.0.0'
 }
 
 test {
