@@ -5,9 +5,9 @@
 // license that can be found in the LICENSE file
 // at the root directory of this project.
 
-package frc.robot.subsystems.drive;
+package bot.den.frc2026.quaternion.subsystems.drive;
 
-import static frc.robot.util.PhoenixUtil.*;
+import static bot.den.frc2026.quaternion.util.PhoenixUtil.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -34,7 +34,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.generated.TunerConstants;
+import bot.den.frc2026.quaternion.generated.TunerConstants;
 import java.util.Queue;
 
 /**

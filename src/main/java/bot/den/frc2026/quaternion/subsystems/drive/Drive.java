@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file
 // at the root directory of this project.
 
-package frc.robot.subsystems.drive;
+package bot.den.frc2026.quaternion.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -39,10 +39,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
-import frc.robot.generated.TunerConstants;
-import frc.robot.util.LocalADStarAK;
+import bot.den.frc2026.quaternion.Constants;
+import bot.den.frc2026.quaternion.Constants.Mode;
+import bot.den.frc2026.quaternion.generated.TunerConstants;
+import bot.den.frc2026.quaternion.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;

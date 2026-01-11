@@ -1,4 +1,4 @@
-package frc.robot.rebuilt;
+package bot.den.frc2026.quaternion.rebuilt;
 
 import bot.den.foxflow.RobotState;
 import bot.den.foxflow.StateMachine;
