@@ -187,4 +187,4 @@ compile_commands.json
 .factorypath
 
 # Version file
-src/main/java/bot/den/frc2026/quaternion/BuildConstants.java
+src/main/java/bot/den/frc2026/quaternion/generated/BuildConstants.java

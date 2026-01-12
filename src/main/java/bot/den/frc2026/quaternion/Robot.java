@@ -7,6 +7,7 @@
 
 package bot.den.frc2026.quaternion;
 
+import bot.den.frc2026.quaternion.generated.BuildConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
