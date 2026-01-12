@@ -33,12 +33,12 @@ public enum MatchState implements LimitsStateTransitions<MatchState> {
         // When teleop is enabled, start the transition shift
         stateMachine.state(RobotState.TELEOP, NONE).to(TRANSITION_SHIFT).transitionAlways();
         // Progress through the various states as time progresses
-        stateMachine.state(TRANSITION_SHIFT).to(SHIFT_1).transitionAfter(Seconds.of(10));
-        stateMachine.state(SHIFT_1).to(SHIFT_2).transitionAfter(Seconds.of(25));
-        stateMachine.state(SHIFT_2).to(SHIFT_3).transitionAfter(Seconds.of(25));
-        stateMachine.state(SHIFT_3).to(SHIFT_4).transitionAfter(Seconds.of(25));
-        stateMachine.state(SHIFT_4).to(END_GAME).transitionAfter(Seconds.of(25));
-        stateMachine.state(END_GAME).to(NONE).transitionAfter(Seconds.of(30));
+        stateMachine.state(TRANSITION_SHIFT).to(SHIFT_1).transitionAfter(MatchState.TRANSITION_SHIFT.timeInState);
+        stateMachine.state(SHIFT_1).to(SHIFT_2).transitionAfter(MatchState.SHIFT_1.timeInState);
+        stateMachine.state(SHIFT_2).to(SHIFT_3).transitionAfter(MatchState.SHIFT_2.timeInState);
+        stateMachine.state(SHIFT_3).to(SHIFT_4).transitionAfter(MatchState.SHIFT_3.timeInState);
+        stateMachine.state(SHIFT_4).to(END_GAME).transitionAfter(MatchState.SHIFT_4.timeInState);
+        stateMachine.state(END_GAME).to(NONE).transitionAfter(MatchState.END_GAME.timeInState);
 
         // TODO Requires matcher rules and transitionTo shortcut
         // If we move to a disabled state at any time, we no longer have a match state
