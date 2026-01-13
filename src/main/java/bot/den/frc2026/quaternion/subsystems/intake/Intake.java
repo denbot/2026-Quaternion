@@ -1,8 +1,6 @@
 package bot.den.frc2026.quaternion.subsystems.intake;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
@@ -11,14 +9,13 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.Orchestra;
 
+import bot.den.frc2026.quaternion.rebuilt.IntakeExtensionState;
+import bot.den.frc2026.quaternion.rebuilt.IntakeState;
 import bot.den.frc2026.quaternion.rebuilt.RebuiltStateMachine;
-import bot.den.frc2026.quaternion.rebuilt.ShooterHoodState;
-import bot.den.frc2026.quaternion.rebuilt.ShooterState;
 import bot.den.frc2026.quaternion.subsystems.CanBeAnInstrument;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -84,13 +81,22 @@ public class Intake extends SubsystemBase implements CanBeAnInstrument {
         return Commands.runOnce(() -> setIntakeVelocity(RotationsPerSecond.of(0)));
     }
 
-    public Command setHoodAngleCommand() {
+    public Command setExtenderOutCommand() {
         return this.runOnce(() -> setExtenderAngle(extenderPositionSetpoint))
                 .andThen(Commands.waitUntil(
                         () -> Math.abs(Units.rotationsToDegrees(inputs.extenderClosedLoopErrorRot)) < 0.1));
     }
 
+    public Command setExtenderInCommand() {
+        return this.runOnce(() -> setExtenderAngle(Degrees.of(0)))
+                .andThen(Commands.waitUntil(
+                        () -> Math.abs(Units.rotationsToDegrees(inputs.extenderClosedLoopErrorRot)) < 0.1));
+    }
+
     public void setup(RebuiltStateMachine stateMachine) {
-        
+        stateMachine.state(IntakeState.OFF).to(IntakeState.ON).transitionAlways().run(runIntakeOnCommand());
+        stateMachine.state(IntakeState.ON).to(IntakeState.OFF).transitionAlways().run(runIntakeOffCommand());
+        stateMachine.state(IntakeExtensionState.IN).to(IntakeExtensionState.OUT).transitionAlways().run(setExtenderOutCommand());
+        stateMachine.state(IntakeExtensionState.OUT).to(IntakeExtensionState.IN).transitionAlways().run(setExtenderInCommand());
     }
 }

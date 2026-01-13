@@ -105,7 +105,7 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
     }
 
     public Command setHoodAngleCommand() {
-        return this.runOnce(() -> setHoodAngle(hoodPositionSetpoint))
+        return this.runOnce(() -> setHoodAngle(Degrees.of(10)))
                 .andThen(Commands.waitUntil(
                         () -> Math.abs(Units.rotationsToDegrees(inputs.hoodClosedLoopErrorRot)) < 0.1));
     }

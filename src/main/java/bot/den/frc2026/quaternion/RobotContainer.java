@@ -20,6 +20,8 @@ import bot.den.foxflow.RobotState;
 import bot.den.frc2026.quaternion.commands.DriveCommands;
 import bot.den.frc2026.quaternion.generated.TunerConstants;
 import bot.den.frc2026.quaternion.rebuilt.HubState;
+import bot.den.frc2026.quaternion.rebuilt.IntakeExtensionState;
+import bot.den.frc2026.quaternion.rebuilt.IntakeState;
 import bot.den.frc2026.quaternion.rebuilt.MatchState;
 import bot.den.frc2026.quaternion.rebuilt.Rebuilt;
 import bot.den.frc2026.quaternion.rebuilt.RebuiltStateMachine;
@@ -31,6 +33,10 @@ import bot.den.frc2026.quaternion.subsystems.drive.GyroIOPigeon2;
 import bot.den.frc2026.quaternion.subsystems.drive.ModuleIO;
 import bot.den.frc2026.quaternion.subsystems.drive.ModuleIOSim;
 import bot.den.frc2026.quaternion.subsystems.drive.ModuleIOTalonFX;
+import bot.den.frc2026.quaternion.subsystems.intake.Intake;
+import bot.den.frc2026.quaternion.subsystems.intake.IntakeIO;
+import bot.den.frc2026.quaternion.subsystems.intake.IntakeIOReal;
+import bot.den.frc2026.quaternion.subsystems.intake.IntakeIOSim;
 import bot.den.frc2026.quaternion.subsystems.shooter.Shooter;
 import bot.den.frc2026.quaternion.subsystems.shooter.ShooterIO;
 import bot.den.frc2026.quaternion.subsystems.shooter.ShooterIOReal;
@@ -53,8 +59,9 @@ public class RobotContainer {
     // Subsystems
     private final Drive drive;
     private final Shooter shooter;
+    private final Intake intake;
     private final RebuiltStateMachine stateMachine = new RebuiltStateMachine(MatchState.NONE, HubState.INACTIVE,
-            ShooterState.OFF, ShooterHoodState.NONE);
+            ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -79,6 +86,7 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.BackRight));
 
                 shooter = new Shooter(new ShooterIOReal());
+                intake = new Intake(new IntakeIOReal());
 
                 break;
 
@@ -93,6 +101,7 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.BackRight));
 
                 shooter = new Shooter(new ShooterIOSim());
+                intake = new Intake(new IntakeIOSim());
                 break;
 
             default:
@@ -109,7 +118,10 @@ public class RobotContainer {
                         new ModuleIO() {
                         });
 
-                shooter = new Shooter(new ShooterIO() {});
+                shooter = new Shooter(new ShooterIO() {
+                });
+                intake = new Intake(new IntakeIO() {
+                });
                 break;
         }
 
@@ -140,55 +152,62 @@ public class RobotContainer {
         MatchState.setup(stateMachine);
         ShooterState.setup(stateMachine);
         shooter.setup(stateMachine);
+        intake.setup(stateMachine);
     }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+    /**
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by
+     * instantiating a {@link GenericHID} or one of its subclasses ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+     * it to a {@link
+     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
+    private void configureButtonBindings() {
+        // Default command, normal field-relative drive
+        drive.setDefaultCommand(
+                DriveCommands.joystickDrive(
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        () -> -controller.getRightX()));
 
-    // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.kZero));
+        // Lock to 0° when A button is held
+        controller
+                .a()
+                .whileTrue(
+                        DriveCommands.joystickDriveAtAngle(
+                                drive,
+                                () -> -controller.getLeftY(),
+                                () -> -controller.getLeftX(),
+                                () -> Rotation2d.kZero));
 
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+        // Switch to X pattern when X button is pressed
+        controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                    drive)
-                .ignoringDisable(true));
+        // Reset gyro to 0° when B button is pressed
+        controller
+                .b()
+                .onTrue(
+                        Commands.runOnce(
+                                () -> drive.setPose(
+                                        new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
+                                drive)
+                                .ignoringDisable(true));
 
-    controller
-        .rightTrigger()
-        .whileTrue(
-            Commands.runEnd(() -> stateMachine.transitionTo(ShooterState.SHOOTING), () -> stateMachine.transitionTo(ShooterState.AT_SPEED))
-        );
+        controller
+                .rightTrigger()
+                .whileTrue(
+                        Commands.runEnd(() -> stateMachine.transitionTo(ShooterState.SHOOTING),
+                                () -> stateMachine.transitionTo(ShooterState.AT_SPEED)));
+
+        controller
+                .leftTrigger()
+                .whileTrue(
+                        Commands.runEnd(() -> stateMachine.transitionTo(IntakeState.ON),
+                                () -> stateMachine.transitionTo(IntakeState.OFF)));
+
     }
-
-    
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

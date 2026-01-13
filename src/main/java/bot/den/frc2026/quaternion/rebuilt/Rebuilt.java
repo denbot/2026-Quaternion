@@ -9,6 +9,8 @@ public record Rebuilt(
         MatchState matchState,
         HubState hubState,
         ShooterState shooterState,
-        ShooterHoodState shooterHoodState
+        ShooterHoodState shooterHoodState,
+        IntakeState intakestate,
+        IntakeExtensionState intakeExtensionState
 ) {
 }
