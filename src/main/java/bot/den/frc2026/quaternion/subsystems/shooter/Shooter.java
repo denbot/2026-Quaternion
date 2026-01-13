@@ -1,6 +1,5 @@
 package bot.den.frc2026.quaternion.subsystems.shooter;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
@@ -27,7 +26,9 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
 
     private Angle hoodPositionSetpoint = Radians.zero();
     private AngularVelocity shooterVelocitySetpoint = RadiansPerSecond.zero();
-    private AngularVelocity feederVelocitySetpoint = RadiansPerSecond.zero();
+    private AngularVelocity shooterFeederVelocitySetpoint = RadiansPerSecond.zero();
+    private AngularVelocity hopperFeederVelocitySetpoint = RadiansPerSecond.zero();
+
 
     public Shooter(ShooterIO io) {
         this.io = io;
@@ -41,8 +42,8 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
         Logger.recordOutput("Shooter/Hood Setpoint", hoodPositionSetpoint);
         Logger.recordOutput("Shooter/Shooter Velocity", inputs.shooterVelocityRotPerSec.in(RotationsPerSecond));
         Logger.recordOutput("Shooter/Shooter Velocity Setpoint", shooterVelocitySetpoint);
-        Logger.recordOutput("Shooter/Feeder Velocity", inputs.feederVelocityRotPerSec.in(RotationsPerSecond));
-        Logger.recordOutput("Shooter/Feeder Velocity Setpoint", feederVelocitySetpoint);
+        Logger.recordOutput("Shooter/ShooterFeeder Velocity", inputs.shooterFeederVelocityRotPerSec.in(RotationsPerSecond));
+        Logger.recordOutput("Shooter/ShooterFeeder Velocity Setpoint", shooterFeederVelocitySetpoint);
     }
 
     public void addInstruments(Orchestra orchestra) {
@@ -77,18 +78,20 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
         shooterVelocitySetpoint = velocity;
     }
 
-    public AngularVelocity getFeederVelocity() {
-        return inputs.feederVelocityRotPerSec;
+    public AngularVelocity getShooterFeederVelocity() {
+        return inputs.shooterFeederVelocityRotPerSec;
     }
 
     public void setFeederVelocity(AngularVelocity velocity) {
-        io.setFeederVelocity(velocity);
-        feederVelocitySetpoint = velocity;
+        io.setShooterFeederVelocity(velocity);
+        shooterFeederVelocitySetpoint = velocity;
+        io.setHopperFeederVelocity(velocity);
+        hopperFeederVelocitySetpoint = velocity;
     }
 
     public Command startFeederCommand() {
         return Commands.runOnce(
-                () -> setFeederVelocity(RotationsPerSecond.of(ShooterConstants.feederSpeed)));
+                () -> setFeederVelocity(RotationsPerSecond.of(ShooterConstants.shooterFeederSpeed)));
     }
 
     public Command stopFeederCommand() {

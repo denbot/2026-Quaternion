@@ -14,19 +14,19 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class ShooterIOSim implements ShooterIO{
     private static final DCMotor shooterMotor = DCMotor.getKrakenX60Foc(1);
-    private static final DCMotor feederMotor = DCMotor.getMinion(1);
+    private static final DCMotor shooterFeederMotor = DCMotor.getMinion(1);
     private static final DCMotor hoodMotor = DCMotor.getKrakenX44Foc(1);
 
     private DCMotorSim shooterSim;
-    private DCMotorSim feederSim;
+    private DCMotorSim shooterFeederSim;
     private DCMotorSim hoodSim;
 
     private final PIDController shooterController = new PIDController(0.1, 0, 0);
-    private final PIDController feederController = new PIDController(1.0, 0, 0);
+    private final PIDController shooterFeederController = new PIDController(1.0, 0, 0);
     private final PIDController hoodController = new PIDController(1.0, 0, 0);
 
     private double shooterAppliedVolts = 0.0;
-    private double feederAppliedVolts = 0.0;
+    private double shooterFeederAppliedVolts = 0.0;
     private double hoodAppliedVolts = 0.0;
 
     public ShooterIOSim() {
@@ -34,9 +34,9 @@ public class ShooterIOSim implements ShooterIO{
                 LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.008, 1),
                 shooterMotor);
 
-        feederSim = new DCMotorSim(
+        shooterFeederSim = new DCMotorSim(
                 LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.008, 1),
-                feederMotor);
+                shooterFeederMotor);
 
         hoodSim = new DCMotorSim(
                 LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.1, 120),
@@ -46,23 +46,23 @@ public class ShooterIOSim implements ShooterIO{
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
         shooterAppliedVolts = shooterController.calculate(shooterSim.getAngularVelocity().in(RotationsPerSecond));
-        feederAppliedVolts = feederController.calculate(feederSim.getAngularPosition().in(Degrees));
+        shooterFeederAppliedVolts = shooterFeederController.calculate(shooterFeederSim.getAngularPosition().in(Degrees));
         hoodAppliedVolts = hoodController.calculate(hoodSim.getAngularPosition().in(Degrees));
 
         shooterSim.setInputVoltage(MathUtil.clamp(shooterAppliedVolts, -12.0,
                 12.0));
         shooterSim.update(0.02);
 
-        feederSim.setInputVoltage(MathUtil.clamp(feederAppliedVolts, -12.0,
+        shooterFeederSim.setInputVoltage(MathUtil.clamp(shooterFeederAppliedVolts, -12.0,
                 12.0));
-        feederSim.update(0.02);
+        shooterFeederSim.update(0.02);
 
         hoodSim.setInputVoltage(MathUtil.clamp(hoodAppliedVolts, -12.0,
                 12.0));
         hoodSim.update(0.02);
 
         inputs.shooterConnected = true;
-        inputs.feederConnected = true;
+        inputs.shooterFeederConnected = true;
         inputs.hoodConnected = true;
 
         // Sim Velocity defaults to Rad/sec. 60 rps = 377 Rad/sec
@@ -70,8 +70,8 @@ public class ShooterIOSim implements ShooterIO{
         inputs.shooterCurrentAmps = Amp.of(shooterSim.getCurrentDrawAmps());
         inputs.shooterClosedLoopErrorRot = shooterController.getError();
 
-        inputs.feederVelocityRotPerSec = RotationsPerSecond.of(feederSim.getAngularVelocityRPM() / 60.0);
-        inputs.feederCurrentAmps = Amp.of(feederSim.getCurrentDrawAmps());
+        inputs.shooterFeederVelocityRotPerSec = RotationsPerSecond.of(shooterFeederSim.getAngularVelocityRPM() / 60.0);
+        inputs.shooterFeederCurrentAmps = Amp.of(shooterFeederSim.getCurrentDrawAmps());
 
         inputs.hoodPositionRot = hoodSim.getAngularPosition();
         inputs.hoodVelocityRotPerSec = RotationsPerSecond.of(hoodSim.getAngularVelocityRPM() / 60.0);
@@ -90,9 +90,9 @@ public class ShooterIOSim implements ShooterIO{
         shooterController.setSetpoint(velocity.in(RotationsPerSecond));
     }
 
-    /** Set the feeder wheel velocity. */
-    public void setFeederVelocity(AngularVelocity velocity) {
-        feederController.setSetpoint(velocity.in(RotationsPerSecond));
+    /** Set the shooterFeeder wheel velocity. */
+    public void setshooterFeederVelocity(AngularVelocity velocity) {
+        shooterFeederController.setSetpoint(velocity.in(RotationsPerSecond));
     }
 
     /** Apply a neutral static brake to the shooter rotator motor. */

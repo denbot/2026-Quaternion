@@ -24,9 +24,13 @@ public interface ShooterIO {
     public double hoodClosedLoopErrorRot = 0.0;
     public AngularVelocity hoodVelocityRotPerSec = RevolutionsPerSecond.zero();
 
-    public boolean feederConnected = false;
-    public AngularVelocity feederVelocityRotPerSec = RevolutionsPerSecond.zero();
-    public Current feederCurrentAmps = Amp.zero();
+    public boolean shooterFeederConnected = false;
+    public AngularVelocity shooterFeederVelocityRotPerSec = RevolutionsPerSecond.zero();
+    public Current shooterFeederCurrentAmps = Amp.zero();
+
+    public boolean hopperFeederConnected = false;
+    public AngularVelocity hopperFeederVelocityRotPerSec = RevolutionsPerSecond.zero();
+    public Current hopperFeederCurrentAmps = Amp.zero();
   }
 
   //List of methods that each IO Layer should be accounting for
@@ -41,8 +45,11 @@ public interface ShooterIO {
   /** Set the shooter wheel velocity. */
   public default void setShooterVelocity(AngularVelocity velocity) {}
 
-  /** Set the feeder wheel velocity. */
-  public default void setFeederVelocity(AngularVelocity velocity) {}
+  /** Set the shooterFeeder wheel velocity. */
+  public default void setShooterFeederVelocity(AngularVelocity velocity) {}
+
+  /** Set the hopperFeeder wheel velocity. */
+  public default void setHopperFeederVelocity(AngularVelocity velocity) {}
 
   /** Apply a neutral static brake to the shooter rotator motor. */
   public default void setStaticBrake() {}
