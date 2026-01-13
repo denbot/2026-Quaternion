@@ -78,7 +78,7 @@ public class ShooterIOSim implements ShooterIO{
         inputs.hoodClosedLoopErrorRot = hoodController.getError();
     }
 
-    /* Set the intake rotator angle.
+    /* Set the hood rotation angle.
     * Make sure units of measurement are consistent.
     */
     public void setHoodAngleDegrees(Angle angle) {

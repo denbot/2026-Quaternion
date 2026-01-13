@@ -38,7 +38,7 @@ public class ShooterIOReal implements ShooterIO, CanBeAnInstrument {
     private static final VelocityTorqueCurrentFOC shooterSpin = new VelocityTorqueCurrentFOC(0)
             .withAcceleration(ShooterConstants.shooterAcceleration);
     private static final VelocityTorqueCurrentFOC feederSpin = new VelocityTorqueCurrentFOC(0)
-            .withAcceleration(ShooterConstants.shooterAcceleration);
+            .withAcceleration(ShooterConstants.feederAcceleration);
 
     private final Debouncer shooterConnectedDebounce = new Debouncer(0.5);
     private final Debouncer feederConnectedDebounce = new Debouncer(0.5);
