@@ -9,7 +9,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-def ROBOT_MAIN_CLASS = "frc.robot.Main"
+def ROBOT_MAIN_CLASS = "bot.den.frc2026.quaternion.Main"
 
 repositories {
     maven {
