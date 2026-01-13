@@ -195,18 +195,12 @@ public class RobotContainer {
                                 drive)
                                 .ignoringDisable(true));
 
-        controller
-                .rightTrigger()
-                .whileTrue(
-                        Commands.runEnd(() -> stateMachine.transitionTo(ShooterState.SHOOTING),
-                                () -> stateMachine.transitionTo(ShooterState.AT_SPEED)));
 
-        controller
-                .leftTrigger()
-                .whileTrue(
-                        Commands.runEnd(() -> stateMachine.transitionTo(IntakeState.ON),
-                                () -> stateMachine.transitionTo(IntakeState.OFF)));
+        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SHOOTING).transitionWhen(controller.rightTrigger());
 
+        stateMachine.state(IntakeState.OFF).to(IntakeState.ON).transitionWhen(controller.leftTrigger());
+
+        stateMachine.state(IntakeState.ON).to(IntakeState.OFF).transitionWhen(controller.leftTrigger().negate());
     }
 
     /**
