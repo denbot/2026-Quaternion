@@ -64,7 +64,7 @@ public class Intake extends SubsystemBase implements CanBeAnInstrument {
         return inputs.extenderVelocityRotPerSec;
     }
 
-    public AngularVelocity getIntakerVelocity() {
+    public AngularVelocity getIntakeVelocity() {
         return inputs.intakeVelocityRotPerSec;
     }
 
@@ -74,7 +74,7 @@ public class Intake extends SubsystemBase implements CanBeAnInstrument {
     }
 
     public Command runIntakeOnCommand() {
-        return Commands.runOnce(() -> setIntakeVelocity(RotationsPerSecond.of(5)));
+        return Commands.runOnce(() -> setIntakeVelocity(RotationsPerSecond.of(IntakeConstants.intakeSpeed)));
     }
 
     public Command runIntakeOffCommand() {

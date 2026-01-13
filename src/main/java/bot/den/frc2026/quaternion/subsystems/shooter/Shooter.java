@@ -88,7 +88,7 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
 
     public Command startFeederCommand() {
         return Commands.runOnce(
-                () -> setFeederVelocity(RotationsPerSecond.of(60)));
+                () -> setFeederVelocity(RotationsPerSecond.of(ShooterConstants.feederSpeed)));
     }
 
     public Command stopFeederCommand() {
@@ -97,7 +97,7 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
     }
 
     public Command runShooterOnCommand() {
-        return Commands.runOnce(() -> setShooterVelocity(RotationsPerSecond.of(5)));
+        return Commands.runOnce(() -> setShooterVelocity(RotationsPerSecond.of(ShooterConstants.shooterSpeed)));
     }
 
     public Command runShooterOffCommand() {
