@@ -68,6 +68,7 @@ public class ShooterIOSim implements ShooterIO{
         // Sim Velocity defaults to Rad/sec. 60 rps = 377 Rad/sec
         inputs.shooterVelocityRotPerSec = RotationsPerSecond.of(shooterSim.getAngularVelocityRPM() / 60.0);
         inputs.shooterCurrentAmps = Amp.of(shooterSim.getCurrentDrawAmps());
+        inputs.shooterClosedLoopErrorRot = shooterController.getError();
 
         inputs.feederVelocityRotPerSec = RotationsPerSecond.of(feederSim.getAngularVelocityRPM() / 60.0);
         inputs.feederCurrentAmps = Amp.of(feederSim.getCurrentDrawAmps());

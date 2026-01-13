@@ -10,6 +10,9 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.Orchestra;
 
+import bot.den.frc2026.quaternion.rebuilt.RebuiltStateMachine;
+import bot.den.frc2026.quaternion.rebuilt.ShooterHoodState;
+import bot.den.frc2026.quaternion.rebuilt.ShooterState;
 import bot.den.frc2026.quaternion.subsystems.CanBeAnInstrument;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -83,9 +86,13 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
         feederVelocitySetpoint = velocity;
     }
 
-    public Command runFeederCommand() {
-        return this.runEnd(
-                () -> setFeederVelocity(RotationsPerSecond.of(60)),
+    public Command startFeederCommand() {
+        return Commands.runOnce(
+                () -> setFeederVelocity(RotationsPerSecond.of(60)));
+    }
+
+    public Command stopFeederCommand() {
+        return Commands.runOnce(
                 () -> setFeederVelocity(RotationsPerSecond.of(0)));
     }
 
@@ -97,9 +104,29 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
         return Commands.runOnce(() -> setShooterVelocity(RotationsPerSecond.of(0)));
     }
 
-    public Command hoodAngleCloseCommand() {
-        return this.runOnce(() -> setHoodAngle(Degree.of(5)))
+    public Command setHoodAngleCommand() {
+        return this.runOnce(() -> setHoodAngle(hoodPositionSetpoint))
                 .andThen(Commands.waitUntil(
                         () -> Math.abs(Units.rotationsToDegrees(inputs.hoodClosedLoopErrorRot)) < 0.1));
+    }
+
+    public void setup(RebuiltStateMachine stateMachine) {
+        stateMachine.state(ShooterState.SPINNING_UP).to(ShooterState.AT_SPEED).transitionWhen(
+                () -> Math.abs(Units.rotationsToDegrees(inputs.shooterClosedLoopErrorRot)) < 1);
+
+        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SPINNING_UP).transitionWhen(
+                () -> Math.abs(Units.rotationsToDegrees(inputs.shooterClosedLoopErrorRot)) > 1);
+
+        stateMachine.state(ShooterState.OFF).to(ShooterState.SPINNING_UP).transitionAlways().run(runShooterOnCommand());
+
+        stateMachine.state(ShooterState.SPINNING_UP).to(ShooterState.OFF).transitionAlways()
+                .run(runShooterOffCommand());
+        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.OFF).transitionAlways().run(runShooterOffCommand());
+        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.OFF).transitionAlways().run(runShooterOffCommand());
+
+        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SHOOTING).transitionAlways().run(startFeederCommand());
+        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.AT_SPEED).transitionAlways().run(stopFeederCommand());
+
+        stateMachine.state(ShooterHoodState.NONE).to(ShooterHoodState.CLOSE_SHOT).transitionAlways().run(setHoodAngleCommand());
     }
 }

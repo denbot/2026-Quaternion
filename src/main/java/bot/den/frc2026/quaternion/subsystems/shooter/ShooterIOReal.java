@@ -46,6 +46,7 @@ public class ShooterIOReal implements ShooterIO, CanBeAnInstrument {
 
     private final StatusSignal<AngularVelocity> shooterVelocityRotPerSec = shooter.getVelocity();
     private final StatusSignal<Current> shooterCurrentAmps = shooter.getSupplyCurrent();
+    private final StatusSignal<Double> shooterClosedLoopErrorRot = shooter.getClosedLoopError();
 
     private final StatusSignal<AngularVelocity> feederVelocityRotPerSec = feeder.getVelocity();
     private final StatusSignal<Current> feederCurrentAmps = feeder.getSupplyCurrent();
@@ -132,6 +133,7 @@ public class ShooterIOReal implements ShooterIO, CanBeAnInstrument {
 
         inputs.shooterVelocityRotPerSec = shooterVelocityRotPerSec.getValue();
         inputs.shooterCurrentAmps = shooterCurrentAmps.getValue();
+        inputs.shooterClosedLoopErrorRot = shooterClosedLoopErrorRot.getValue();
 
         inputs.feederVelocityRotPerSec = feederVelocityRotPerSec.getValue();
         inputs.feederCurrentAmps = feederCurrentAmps.getValue();

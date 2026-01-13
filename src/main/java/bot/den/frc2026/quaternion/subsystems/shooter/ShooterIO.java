@@ -17,6 +17,7 @@ public interface ShooterIO {
     public boolean shooterConnected = false;
     public AngularVelocity shooterVelocityRotPerSec = RevolutionsPerSecond.zero();
     public Current shooterCurrentAmps = Amp.zero();
+    public double shooterClosedLoopErrorRot = 0.0;
 
     public boolean hoodConnected = false;
     public Angle hoodPositionRot = Degree.zero();

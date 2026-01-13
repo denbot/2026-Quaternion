@@ -8,6 +8,7 @@ public record Rebuilt(
         RobotState robotState,
         MatchState matchState,
         HubState hubState,
-        ShooterState shooterState
+        ShooterState shooterState,
+        ShooterHoodState shooterHoodState
 ) {
 }
