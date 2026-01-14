@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.Orchestra;
 
+import bot.den.frc2026.quaternion.rebuilt.IntakeState;
 import bot.den.frc2026.quaternion.rebuilt.RebuiltStateMachine;
 import bot.den.frc2026.quaternion.rebuilt.ShooterHoodState;
 import bot.den.frc2026.quaternion.rebuilt.ShooterState;
@@ -82,6 +83,7 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
         return inputs.shooterFeederVelocityRotPerSec;
     }
 
+    // speed is a power. blame Quinn
     public void setFeederVelocity(AngularVelocity velocity) {
         io.setShooterFeederVelocity(velocity);
         shooterFeederVelocitySetpoint = velocity;
@@ -89,7 +91,16 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
         hopperFeederVelocitySetpoint = velocity;
     }
 
+    
+    /*
+     * SPEED IS NOT A SPEED IT IS A POWER! BLAME QUINN.
+     */
     public Command startFeederCommand() {
+        return Commands.runOnce(
+                () -> setFeederVelocity(RotationsPerSecond.of(ShooterConstants.shooterFeederSpeed)));
+    }
+
+    public Command reverseFeederCommand() {
         return Commands.runOnce(
                 () -> setFeederVelocity(RotationsPerSecond.of(ShooterConstants.shooterFeederSpeed)));
     }
@@ -115,10 +126,10 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
 
     public void setup(RebuiltStateMachine stateMachine) {
         stateMachine.state(ShooterState.SPINNING_UP).to(ShooterState.AT_SPEED).transitionWhen(
-                () -> Math.abs(Units.rotationsToDegrees(inputs.shooterClosedLoopErrorRot)) < 1);
+                () -> Math.abs(Units.rotationsToDegrees(inputs.shooterClosedLoopErrorRot)) < 10);
 
         stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SPINNING_UP).transitionWhen(
-                () -> Math.abs(Units.rotationsToDegrees(inputs.shooterClosedLoopErrorRot)) > 1);
+                () -> Math.abs(Units.rotationsToDegrees(inputs.shooterClosedLoopErrorRot)) > 10);
 
         stateMachine.state(ShooterState.OFF).to(ShooterState.SPINNING_UP).run(runShooterOnCommand());
 

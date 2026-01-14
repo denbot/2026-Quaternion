@@ -172,17 +172,17 @@ public class RobotContainer {
                         () -> -controller.getRightX()));
 
         // Lock to 0° when A button is held
-        controller
-                .a()
-                .whileTrue(
-                        DriveCommands.joystickDriveAtAngle(
-                                drive,
-                                () -> -controller.getLeftY(),
-                                () -> -controller.getLeftX(),
-                                () -> Rotation2d.kZero));
+        // controller
+        //         .a()
+        //         .whileTrue(
+        //                 DriveCommands.joystickDriveAtAngle(
+        //                         drive,
+        //                         () -> -controller.getLeftY(),
+        //                         () -> -controller.getLeftX(),
+        //                         () -> Rotation2d.kZero));
 
         // Switch to X pattern when X button is pressed
-        controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+        // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
         // Reset gyro to 0° when B button is pressed
         controller
@@ -196,19 +196,24 @@ public class RobotContainer {
 
 
         
-        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SHOOTING).transitionWhen(controller.rightTrigger());
-        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.AT_SPEED).transitionWhen(controller.rightTrigger().negate());
+        controller.rightTrigger().onTrue(shooter.startFeederCommand());
+        controller.rightTrigger().onFalse(shooter.stopFeederCommand());
+        controller.x().onTrue(shooter.reverseFeederCommand());
+        controller.x().onFalse(shooter.stopFeederCommand());
+
+        // stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SHOOTING).transitionWhen(controller.rightTrigger());
+        // stateMachine.state(ShooterState.SHOOTING).to(ShooterState.AT_SPEED).transitionWhen(controller.rightTrigger().negate());
 
         stateMachine.state(ShooterState.OFF).to(ShooterState.SPINNING_UP).transitionWhen(controller.povLeft());
-        stateMachine.state(ShooterState.SPINNING_UP).to(ShooterState.OFF).transitionWhen(controller.povLeft());
-        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.OFF).transitionWhen(controller.povLeft());
-        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.OFF).transitionWhen(controller.povLeft());
+        stateMachine.state(ShooterState.SPINNING_UP).to(ShooterState.OFF).transitionWhen(controller.povRight());
+        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.OFF).transitionWhen(controller.povRight());
+        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.OFF).transitionWhen(controller.povRight());
 
         stateMachine.state(IntakeState.OFF).to(IntakeState.ON).transitionWhen(controller.leftTrigger());
         stateMachine.state(IntakeState.ON).to(IntakeState.OFF).transitionWhen(controller.leftTrigger().negate());
 
         stateMachine.state(IntakeExtensionState.IN).to(IntakeExtensionState.OUT).transitionWhen(controller.rightBumper());
-        stateMachine.state(IntakeExtensionState.OUT).to(IntakeExtensionState.IN).transitionWhen(controller.rightBumper());
+        stateMachine.state(IntakeExtensionState.OUT).to(IntakeExtensionState.IN).transitionWhen(controller.povDown());
     }
 
     /**

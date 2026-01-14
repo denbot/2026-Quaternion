@@ -8,6 +8,6 @@ public class IntakeConstants {
     public static final int INTAKE_MOTOR_ID = 32;
     public static final int EXTENDER_MOTOR_ID = 31;
 
-    public static final double intakeSpeed = 60; // Rotations / Second
+    public static final double intakeSpeed = 80; // Rotations / Second
     public static final double intakeAcceleration = 13; // Rotations / Second^2
 }

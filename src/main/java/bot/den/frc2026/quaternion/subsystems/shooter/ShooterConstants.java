@@ -6,7 +6,7 @@ public class ShooterConstants {
     public static final double reverseSoftLimit = 0;
 
     public static final int SHOOTER_FEEDER_MOTOR_ID = 21;
-    public static final int SHOOTER_MOTOR_ID = 32;
+    public static final int SHOOTER_MOTOR_ID = 22;
     public static final int HOPPER_FEEDER_MOTOR_ID = 11;
     public static final int HOOD_MOTOR_ID = 23;
 
@@ -15,9 +15,9 @@ public class ShooterConstants {
     public static final double shooterSpeed = 60; // Rotations / Second
     public static final double shooterAcceleration = 13; // Rotations / Second^2
 
-    public static final double shooterFeederSpeed = 60; // Rotations / Second
+    public static final double shooterFeederSpeed = 0.8; // Rotations / Second
     public static final double shooterFeederAcceleration = 13; // Rotations / Second^2
 
-    public static final double hopperFeederSpeed = 60; // Rotations / Second
+    public static final double hopperFeederSpeed = 0.8; // Rotations / Second
     public static final double hopperFeederAcceleration = 13; // Rotations / Second^2
 }

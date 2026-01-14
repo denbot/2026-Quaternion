@@ -49,29 +49,26 @@ public class IntakeIOReal implements IntakeIO, CanBeAnInstrument {
 
     public IntakeIOReal() {
         var extenderConfig = new TalonFXConfiguration()
-                .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive))
                 .withCurrentLimits(
                         new CurrentLimitsConfigs()
                                 .withStatorCurrentLimitEnable(true)
-                                .withStatorCurrentLimit(70))
-                .withSoftwareLimitSwitch(
-                        new SoftwareLimitSwitchConfigs()
-                                .withForwardSoftLimitEnable(false)
-                                .withForwardSoftLimitThreshold(IntakeConstants.forwardSoftLimit)
-                                .withReverseSoftLimitEnable(false)
-                                .withReverseSoftLimitThreshold(IntakeConstants.reverseSoftLimit))
-                .withMotionMagic(
-                        new MotionMagicConfigs()
-                                .withMotionMagicAcceleration(4)
-                                .withMotionMagicCruiseVelocity(2))
+                                .withStatorCurrentLimit(10))
+                // .withSoftwareLimitSwitch(
+                //         new SoftwareLimitSwitchConfigs()
+                //                 .withForwardSoftLimitEnable(false)
+                //                 .withForwardSoftLimitThreshold(IntakeConstants.forwardSoftLimit)
+                //                 .withReverseSoftLimitEnable(false)
+                //                 .withReverseSoftLimitThreshold(IntakeConstants.reverseSoftLimit))
+                // .withMotionMagic(
+                //         new MotionMagicConfigs()
+                //                 .withMotionMagicAcceleration(1)
+                //                 .withMotionMagicCruiseVelocity(1))
                 .withSlot0(
                         new Slot0Configs()
-                                .withKP(45)
-                                .withKD(0)
-                                .withKG(0.2)
-                                .withGravityType(GravityTypeValue.Elevator_Static));
+                                .withKP(1));
 
         var intakeConfig = new TalonFXConfiguration()
+                .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive))
                 .withCurrentLimits(
                         new CurrentLimitsConfigs()
                                 .withStatorCurrentLimitEnable(true)
@@ -124,7 +121,7 @@ public class IntakeIOReal implements IntakeIO, CanBeAnInstrument {
      * Set the intake rotator angle.
      * Make sure units of measurement are consistent.
      */
-    public void setExtenderAngleDegrees(Angle angle) {
+    public void setExtenderPosition(Angle angle) {
         extender.setControl(new PositionVoltage(angle.in(Rotations)));
     }
 

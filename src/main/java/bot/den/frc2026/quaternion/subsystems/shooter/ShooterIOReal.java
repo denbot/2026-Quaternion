@@ -9,6 +9,7 @@ import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CommutationConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.ExternalFeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -17,10 +18,12 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.ExternalFeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
@@ -40,10 +43,8 @@ public class ShooterIOReal implements ShooterIO, CanBeAnInstrument {
 
     private static final VelocityTorqueCurrentFOC shooterSpin = new VelocityTorqueCurrentFOC(0)
             .withAcceleration(ShooterConstants.shooterAcceleration);
-    private static final VelocityTorqueCurrentFOC shooterFeederSpin = new VelocityTorqueCurrentFOC(0)
-            .withAcceleration(ShooterConstants.shooterFeederAcceleration);
-    private static final VelocityTorqueCurrentFOC hopperFeederSpin = new VelocityTorqueCurrentFOC(0)
-            .withAcceleration(ShooterConstants.shooterFeederAcceleration);
+    private static final VelocityDutyCycle shooterFeederSpin = new VelocityDutyCycle(0).withAcceleration(ShooterConstants.shooterFeederAcceleration);
+    private static final VelocityDutyCycle hopperFeederSpin = new VelocityDutyCycle(0).withAcceleration(ShooterConstants.shooterFeederAcceleration);
 
     private final Debouncer shooterConnectedDebounce = new Debouncer(0.5);
     private final Debouncer shooterFeederConnectedDebounce = new Debouncer(0.5);
@@ -89,6 +90,7 @@ public class ShooterIOReal implements ShooterIO, CanBeAnInstrument {
                                 .withGravityType(GravityTypeValue.Elevator_Static));
 
         var shooterConfig = new TalonFXConfiguration()
+                .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive))
                 .withCurrentLimits(
                         new CurrentLimitsConfigs()
                                 .withStatorCurrentLimitEnable(true)
@@ -96,19 +98,23 @@ public class ShooterIOReal implements ShooterIO, CanBeAnInstrument {
                 .withSlot0(new Slot0Configs().withKS(5.4).withKP(3));
 
         var shooterFeederConfig = new TalonFXSConfiguration()
+                .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive))
                 .withCurrentLimits(
                         new CurrentLimitsConfigs()
                                 .withStatorCurrentLimitEnable(true)
                                 .withStatorCurrentLimit(60))
                 .withCommutation(new CommutationConfigs().withMotorArrangement(MotorArrangementValue.Minion_JST))
+                .withExternalFeedback(new ExternalFeedbackConfigs().withExternalFeedbackSensorSource(ExternalFeedbackSensorSourceValue.Commutation))
                 .withSlot0(new Slot0Configs().withKS(5.4).withKP(3));
 
         var hopperFeederConfig = new TalonFXSConfiguration()
+                .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive))
                 .withCurrentLimits(
                         new CurrentLimitsConfigs()
                                 .withStatorCurrentLimitEnable(true)
                                 .withStatorCurrentLimit(60))
                 .withCommutation(new CommutationConfigs().withMotorArrangement(MotorArrangementValue.Minion_JST))
+                .withExternalFeedback(new ExternalFeedbackConfigs().withExternalFeedbackSensorSource(ExternalFeedbackSensorSourceValue.Commutation))
                 .withSlot0(new Slot0Configs().withKS(5.4).withKP(3));
 
         hood.setNeutralMode(NeutralModeValue.Brake);
@@ -194,13 +200,17 @@ public class ShooterIOReal implements ShooterIO, CanBeAnInstrument {
     }
 
     /** Set the shooter Feeder wheel velocity. */
-    public void setshooterFeederVelocity(AngularVelocity velocity) {
-        shooterFeeder.setControl(shooterFeederSpin.withVelocity(velocity.in(RotationsPerSecond)));
+    public void setShooterFeederVelocity(AngularVelocity velocity) {
+        // the code is lying because Quinn hates it. the 'velocity' is being used as a power here
+        shooterFeeder.set(velocity.in(RotationsPerSecond));
+        // shooterFeeder.setControl(shooterFeederSpin.withVelocity(velocity.in(RotationsPerSecond)));
     }
 
     /** Set the hopper Feeder wheel velocity. */
     public void setHopperFeederVelocity(AngularVelocity velocity) {
-        hopperFeeder.setControl(hopperFeederSpin.withVelocity(velocity.in(RotationsPerSecond)));
+        // the code is lying because Quinn hates it. the 'velocity' is being used as a power here
+        hopperFeeder.set(velocity.in(RotationsPerSecond));
+        // hopperFeeder.setControl(hopperFeederSpin.withVelocity(velocity.in(RotationsPerSecond)));
     }
 
     /** Apply a neutral static brake to the shooter rotator motor. */

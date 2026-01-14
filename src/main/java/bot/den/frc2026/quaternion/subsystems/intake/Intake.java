@@ -3,6 +3,7 @@ package bot.den.frc2026.quaternion.subsystems.intake;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import org.littletonrobotics.junction.Logger;
@@ -82,13 +83,13 @@ public class Intake extends SubsystemBase implements CanBeAnInstrument {
     }
 
     public Command setExtenderOutCommand() {
-        return this.runOnce(() -> setExtenderAngle(Degrees.of(10)))
+        return this.runOnce(() -> setExtenderAngle(Rotations.of(6.7*9)))
                 .andThen(Commands.waitUntil(
                         () -> Math.abs(Units.rotationsToDegrees(inputs.extenderClosedLoopErrorRot)) < 0.1));
     }
 
     public Command setExtenderInCommand() {
-        return this.runOnce(() -> setExtenderAngle(Degrees.of(0)))
+        return this.runOnce(() -> setExtenderAngle(Rotations.of(0)))
                 .andThen(Commands.waitUntil(
                         () -> Math.abs(Units.rotationsToDegrees(inputs.extenderClosedLoopErrorRot)) < 0.1));
     }
