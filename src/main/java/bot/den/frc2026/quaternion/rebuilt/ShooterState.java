@@ -10,10 +10,6 @@ public enum ShooterState implements LimitsStateTransitions<ShooterState>{
     AT_SPEED,
     SHOOTING;
 
-    public static void setup(RebuiltStateMachine stateMachine) {
-        stateMachine.state(MatchState.TRANSITION_SHIFT, OFF).to(SPINNING_UP).transitionAlways();
-    }
-
     @Override
     public boolean canTransitionState(ShooterState newState) {
         return (switch (this) {

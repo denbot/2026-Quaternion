@@ -120,16 +120,16 @@ public class Shooter extends SubsystemBase implements CanBeAnInstrument {
         stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SPINNING_UP).transitionWhen(
                 () -> Math.abs(Units.rotationsToDegrees(inputs.shooterClosedLoopErrorRot)) > 1);
 
-        stateMachine.state(ShooterState.OFF).to(ShooterState.SPINNING_UP).transitionAlways().run(runShooterOnCommand());
+        stateMachine.state(ShooterState.OFF).to(ShooterState.SPINNING_UP).run(runShooterOnCommand());
 
-        stateMachine.state(ShooterState.SPINNING_UP).to(ShooterState.OFF).transitionAlways()
+        stateMachine.state(ShooterState.SPINNING_UP).to(ShooterState.OFF)
                 .run(runShooterOffCommand());
-        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.OFF).transitionAlways().run(runShooterOffCommand());
-        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.OFF).transitionAlways().run(runShooterOffCommand());
+        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.OFF).run(runShooterOffCommand());
+        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.OFF).run(runShooterOffCommand());
 
-        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SHOOTING).transitionAlways().run(startFeederCommand());
-        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.AT_SPEED).transitionAlways().run(stopFeederCommand());
+        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SHOOTING).run(startFeederCommand());
+        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.AT_SPEED).run(stopFeederCommand());
 
-        stateMachine.state(ShooterHoodState.NONE).to(ShooterHoodState.CLOSE_SHOT).transitionAlways().run(setHoodAngleCommand());
+        stateMachine.state(ShooterHoodState.NONE).to(ShooterHoodState.CLOSE_SHOT).run(setHoodAngleCommand());
     }
 }

@@ -124,12 +124,12 @@ public class IntakeIOReal implements IntakeIO, CanBeAnInstrument {
      * Set the intake rotator angle.
      * Make sure units of measurement are consistent.
      */
-    public void setextenderAngleDegrees(Angle angle) {
+    public void setExtenderAngleDegrees(Angle angle) {
         extender.setControl(new PositionVoltage(angle.in(Rotations)));
     }
 
     /** Set the intake wheel velocity. */
-    public void setintakeVelocity(AngularVelocity velocity) {
+    public void setIntakeVelocity(AngularVelocity velocity) {
         intake.setControl(intakeSpin.withVelocity(velocity.in(RotationsPerSecond)));
     }
 

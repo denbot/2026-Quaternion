@@ -150,7 +150,6 @@ public class RobotContainer {
         // setup state transitions
         HubState.setup(stateMachine);
         MatchState.setup(stateMachine);
-        ShooterState.setup(stateMachine);
         shooter.setup(stateMachine);
         intake.setup(stateMachine);
     }
@@ -196,11 +195,20 @@ public class RobotContainer {
                                 .ignoringDisable(true));
 
 
+        
         stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.SHOOTING).transitionWhen(controller.rightTrigger());
+        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.AT_SPEED).transitionWhen(controller.rightTrigger().negate());
+
+        stateMachine.state(ShooterState.OFF).to(ShooterState.SPINNING_UP).transitionWhen(controller.povLeft());
+        stateMachine.state(ShooterState.SPINNING_UP).to(ShooterState.OFF).transitionWhen(controller.povLeft());
+        stateMachine.state(ShooterState.AT_SPEED).to(ShooterState.OFF).transitionWhen(controller.povLeft());
+        stateMachine.state(ShooterState.SHOOTING).to(ShooterState.OFF).transitionWhen(controller.povLeft());
 
         stateMachine.state(IntakeState.OFF).to(IntakeState.ON).transitionWhen(controller.leftTrigger());
-
         stateMachine.state(IntakeState.ON).to(IntakeState.OFF).transitionWhen(controller.leftTrigger().negate());
+
+        stateMachine.state(IntakeExtensionState.IN).to(IntakeExtensionState.OUT).transitionWhen(controller.rightBumper());
+        stateMachine.state(IntakeExtensionState.OUT).to(IntakeExtensionState.IN).transitionWhen(controller.rightBumper());
     }
 
     /**

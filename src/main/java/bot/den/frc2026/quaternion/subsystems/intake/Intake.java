@@ -82,7 +82,7 @@ public class Intake extends SubsystemBase implements CanBeAnInstrument {
     }
 
     public Command setExtenderOutCommand() {
-        return this.runOnce(() -> setExtenderAngle(extenderPositionSetpoint))
+        return this.runOnce(() -> setExtenderAngle(Degrees.of(10)))
                 .andThen(Commands.waitUntil(
                         () -> Math.abs(Units.rotationsToDegrees(inputs.extenderClosedLoopErrorRot)) < 0.1));
     }
@@ -94,9 +94,9 @@ public class Intake extends SubsystemBase implements CanBeAnInstrument {
     }
 
     public void setup(RebuiltStateMachine stateMachine) {
-        stateMachine.state(IntakeState.OFF).to(IntakeState.ON).transitionAlways().run(runIntakeOnCommand());
-        stateMachine.state(IntakeState.ON).to(IntakeState.OFF).transitionAlways().run(runIntakeOffCommand());
-        stateMachine.state(IntakeExtensionState.IN).to(IntakeExtensionState.OUT).transitionAlways().run(setExtenderOutCommand());
-        stateMachine.state(IntakeExtensionState.OUT).to(IntakeExtensionState.IN).transitionAlways().run(setExtenderInCommand());
+        stateMachine.state(IntakeState.OFF).to(IntakeState.ON).run(runIntakeOnCommand());
+        stateMachine.state(IntakeState.ON).to(IntakeState.OFF).run(runIntakeOffCommand());
+        stateMachine.state(IntakeExtensionState.IN).to(IntakeExtensionState.OUT).run(setExtenderOutCommand());
+        stateMachine.state(IntakeExtensionState.OUT).to(IntakeExtensionState.IN).run(setExtenderInCommand());
     }
 }

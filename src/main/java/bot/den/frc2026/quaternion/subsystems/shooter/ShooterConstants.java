@@ -5,10 +5,10 @@ public class ShooterConstants {
     public static final double forwardSoftLimit = 0.25;
     public static final double reverseSoftLimit = 0;
 
-    public static final int SHOOTER_FEEDER_MOTOR_ID = 31;
+    public static final int SHOOTER_FEEDER_MOTOR_ID = 21;
     public static final int SHOOTER_MOTOR_ID = 32;
-    public static final int HOPPER_FEEDER_MOTOR_ID = 32;
-    public static final int HOOD_MOTOR_ID = 33;
+    public static final int HOPPER_FEEDER_MOTOR_ID = 11;
+    public static final int HOOD_MOTOR_ID = 23;
 
     public static final double hoodCloseAngle = 0;
 
