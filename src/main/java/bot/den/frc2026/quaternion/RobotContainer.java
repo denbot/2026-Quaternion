@@ -60,8 +60,7 @@ public class RobotContainer {
     private final Drive drive;
     private final Shooter shooter;
     private final Intake intake;
-    private final RebuiltStateMachine stateMachine = new RebuiltStateMachine(MatchState.NONE, HubState.INACTIVE,
-            ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+    private final RebuiltStateMachine stateMachine = new RebuiltStateMachine();
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);

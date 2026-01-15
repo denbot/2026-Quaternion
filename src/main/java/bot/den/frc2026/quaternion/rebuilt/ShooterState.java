@@ -2,10 +2,11 @@ package bot.den.frc2026.quaternion.rebuilt;
 
 import java.util.Set;
 
+import bot.den.foxflow.DefaultState;
 import bot.den.foxflow.LimitsStateTransitions;
 
 public enum ShooterState implements LimitsStateTransitions<ShooterState>{
-    OFF,
+    @DefaultState OFF,
     SPINNING_UP,
     AT_SPEED,
     SHOOTING;

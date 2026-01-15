@@ -1,5 +1,6 @@
 package bot.den.frc2026.quaternion.rebuilt;
 
+import bot.den.foxflow.DefaultState;
 import bot.den.foxflow.LimitsStateTransitions;
 import bot.den.foxflow.RobotState;
 import edu.wpi.first.units.measure.Time;
@@ -9,7 +10,7 @@ import java.util.Set;
 import static edu.wpi.first.units.Units.Seconds;
 
 public enum MatchState implements LimitsStateTransitions<MatchState> {
-    NONE(0),
+    @DefaultState NONE(0),
     AUTO(20),
     TRANSITION_SHIFT(10),
     SHIFT_1(25),

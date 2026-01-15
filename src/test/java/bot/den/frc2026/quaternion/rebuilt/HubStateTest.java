@@ -40,7 +40,7 @@ public class HubStateTest {
 
     @Test
     void whenTheMatchStateIsAutoTheHubIsActive() {
-        var machine = new RebuiltStateMachine(MatchState.NONE, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine();
         HubState.setup(machine);
 
         CommandScheduler.getInstance().schedule(machine.transitionTo(MatchState.AUTO));
@@ -54,7 +54,7 @@ public class HubStateTest {
     void whenTheMatchStateGoesBackToNoneTheHubIsInactive(MatchState startingState) {
         if(startingState == MatchState.NONE) return;
 
-        var machine = new RebuiltStateMachine(startingState, HubState.ACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(startingState, HubState.ACTIVE);
         HubState.setup(machine);
 
         CommandScheduler.getInstance().schedule(machine.transitionTo(MatchState.NONE));
@@ -65,7 +65,7 @@ public class HubStateTest {
 
     @Test
     void whenTheMatchStateIsTransitionShiftTheHubIsActive() {
-        var machine = new RebuiltStateMachine(MatchState.NONE, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine();
         HubState.setup(machine);
 
         CommandScheduler.getInstance().schedule(machine.transitionTo(MatchState.TRANSITION_SHIFT));
@@ -76,7 +76,7 @@ public class HubStateTest {
 
     @Test
     void whenTheMatchStateIsEndGameTheHubIsActive() {
-        var machine = new RebuiltStateMachine(MatchState.SHIFT_4, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(MatchState.SHIFT_4);
         HubState.setup(machine);
 
         CommandScheduler.getInstance().schedule(machine.transitionTo(MatchState.END_GAME));
@@ -93,7 +93,7 @@ public class HubStateTest {
         boolean shiftOneIsOurs = us != autoPoints;
 
         // Transition shift will start active
-        var machine = new RebuiltStateMachine(MatchState.TRANSITION_SHIFT, HubState.ACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(MatchState.TRANSITION_SHIFT, HubState.ACTIVE);
         HubState.setup(machine);
 
         // Shift 1

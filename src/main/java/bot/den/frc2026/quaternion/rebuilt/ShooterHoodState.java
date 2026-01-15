@@ -1,7 +1,9 @@
 package bot.den.frc2026.quaternion.rebuilt;
 
+import bot.den.foxflow.DefaultState;
+
 public enum ShooterHoodState{
-    NONE,
+    @DefaultState NONE,
     TRACKING,
     CLOSE_SHOT
 }

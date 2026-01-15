@@ -1,12 +1,13 @@
 package bot.den.frc2026.quaternion.rebuilt;
 
+import bot.den.foxflow.DefaultState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.Set;
 
 public enum HubState {
-    INACTIVE,
+    @DefaultState INACTIVE,
     ACTIVE;
 
     public static void setup(RebuiltStateMachine stateMachine) {

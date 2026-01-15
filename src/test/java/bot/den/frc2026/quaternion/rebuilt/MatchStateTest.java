@@ -38,7 +38,7 @@ public class MatchStateTest {
 
     @Test
     void nothingHappensWhileRobotIsDisabled() {
-        var machine = new RebuiltStateMachine(MatchState.NONE, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine();
         MatchState.setup(machine);
 
         machine.poll();
@@ -57,7 +57,7 @@ public class MatchStateTest {
     @Test
     void matchStateSwitchesToAutoWhenRobotSwitchesToAuto() {
         setDriverStationState(RobotState.AUTO);
-        var machine = new RebuiltStateMachine(MatchState.NONE, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine();
         MatchState.setup(machine);
 
         machine.poll();
@@ -75,7 +75,7 @@ public class MatchStateTest {
 
     @Test
     void matchStateGoesBackToNoneAfterTwentySeconds() {
-        var machine = new RebuiltStateMachine(MatchState.AUTO, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(MatchState.AUTO);
         MatchState.setup(machine);
 
         SimHooks.stepTiming(MatchState.AUTO.timeInState.in(Seconds) - 1);
@@ -90,7 +90,7 @@ public class MatchStateTest {
     @Test
     void matchStateMovesToTransitionShiftAfterTeleopStarts() {
         setDriverStationState(RobotState.TELEOP);
-        var machine = new RebuiltStateMachine(MatchState.NONE, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine();
         MatchState.setup(machine);
 
         machine.poll();
@@ -109,7 +109,7 @@ public class MatchStateTest {
     @Test
     void matchStateMovesFromTransitionShiftToShiftOne() {
         setDriverStationState(RobotState.TELEOP);
-        var machine = new RebuiltStateMachine(MatchState.TRANSITION_SHIFT, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(MatchState.TRANSITION_SHIFT);
         MatchState.setup(machine);
 
         SimHooks.stepTiming(MatchState.TRANSITION_SHIFT.timeInState.in(Seconds) - 1);
@@ -124,7 +124,7 @@ public class MatchStateTest {
     @Test
     void matchStateMovesFromShiftOneToShiftTwo() {
         setDriverStationState(RobotState.TELEOP);
-        var machine = new RebuiltStateMachine(MatchState.SHIFT_1, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(MatchState.SHIFT_1);
         MatchState.setup(machine);
 
         SimHooks.stepTiming(MatchState.SHIFT_1.timeInState.in(Seconds) - 1);
@@ -139,7 +139,7 @@ public class MatchStateTest {
     @Test
     void matchStateMovesFromShiftTwoToShiftThree() {
         setDriverStationState(RobotState.TELEOP);
-        var machine = new RebuiltStateMachine(MatchState.SHIFT_2, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(MatchState.SHIFT_2);
         MatchState.setup(machine);
 
         SimHooks.stepTiming(MatchState.SHIFT_2.timeInState.in(Seconds) - 1);
@@ -154,7 +154,7 @@ public class MatchStateTest {
     @Test
     void matchStateMovesFromShiftThreeToShiftFour() {
         setDriverStationState(RobotState.TELEOP);
-        var machine = new RebuiltStateMachine(MatchState.SHIFT_3, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(MatchState.SHIFT_3);
         MatchState.setup(machine);
 
         SimHooks.stepTiming(MatchState.SHIFT_3.timeInState.in(Seconds) - 1);
@@ -169,7 +169,7 @@ public class MatchStateTest {
     @Test
     void matchStateMovesFromShiftFourToEndGame() {
         setDriverStationState(RobotState.TELEOP);
-        var machine = new RebuiltStateMachine(MatchState.SHIFT_4, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(MatchState.SHIFT_4);
         MatchState.setup(machine);
 
         SimHooks.stepTiming(MatchState.SHIFT_4.timeInState.in(Seconds) - 1);
@@ -184,7 +184,7 @@ public class MatchStateTest {
     @Test
     void matchStateGoesBackToNoneAfterEndGame() {
         setDriverStationState(RobotState.TELEOP);
-        var machine = new RebuiltStateMachine(MatchState.END_GAME, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(MatchState.END_GAME);
         MatchState.setup(machine);
 
         SimHooks.stepTiming(MatchState.END_GAME.timeInState.in(Seconds) - 1);
@@ -202,7 +202,7 @@ public class MatchStateTest {
         if(matchState == MatchState.NONE) return;
         if(robotState == RobotState.DISABLED) return;
 
-        var machine = new RebuiltStateMachine(matchState, HubState.INACTIVE, ShooterState.OFF, ShooterHoodState.NONE, IntakeState.OFF, IntakeExtensionState.IN);
+        var machine = new RebuiltStateMachine(matchState);
         MatchState.setup(machine);
 
         // Tell the driver station sim what state we're in
