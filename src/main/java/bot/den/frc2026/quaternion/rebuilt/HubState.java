@@ -12,27 +12,19 @@ public enum HubState {
 
     public static void setup(RebuiltStateMachine stateMachine) {
         // Auto
-        stateMachine.state(MatchState.NONE).to(MatchState.AUTO).run(
-                stateMachine.transitionTo(HubState.ACTIVE)
-        );
+        stateMachine.state(MatchState.NONE).to(MatchState.AUTO).transitionTo(HubState.ACTIVE);
 
         // Transition Shift
-        stateMachine.state(MatchState.NONE).to(MatchState.TRANSITION_SHIFT).run(
-                stateMachine.transitionTo(HubState.ACTIVE)
-        );
+        stateMachine.state(MatchState.NONE).to(MatchState.TRANSITION_SHIFT).transitionTo(HubState.ACTIVE);
 
         // End Game
-        stateMachine.state(MatchState.SHIFT_4).to(MatchState.END_GAME).run(
-                stateMachine.transitionTo(HubState.ACTIVE)
-        );
+        stateMachine.state(MatchState.SHIFT_4).to(MatchState.END_GAME).transitionTo(HubState.ACTIVE);
 
         // Any time the match stops, the hub is inactive
         for (var matchState : MatchState.values()) {
             if (matchState == MatchState.NONE) continue;
 
-            stateMachine.state(matchState).to(MatchState.NONE).run(
-                    stateMachine.transitionTo(HubState.INACTIVE)
-            );
+            stateMachine.state(matchState).to(MatchState.NONE).transitionTo(HubState.INACTIVE);
         }
 
         // Game state during shifts

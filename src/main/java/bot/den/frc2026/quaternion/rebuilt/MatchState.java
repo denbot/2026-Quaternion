@@ -41,7 +41,7 @@ public enum MatchState implements LimitsStateTransitions<MatchState> {
         stateMachine.state(SHIFT_4).to(END_GAME).transitionAfter(MatchState.SHIFT_4.timeInState);
         stateMachine.state(END_GAME).to(NONE).transitionAfter(MatchState.END_GAME.timeInState);
 
-        // TODO Requires matcher rules and transitionTo shortcut
+        // TODO Requires matcher rules
         // If we move to a disabled state at any time, we no longer have a match state
 //            stateMachine
 //                    .state(RobotStateMatcher.except(RobotState.DISABLED), MatchStateMatcher.except(NONE))
@@ -54,9 +54,7 @@ public enum MatchState implements LimitsStateTransitions<MatchState> {
             for (var matchState : MatchState.values()) {
                 if (matchState == NONE) continue;
 
-                stateMachine.state(robotState, matchState).to(RobotState.DISABLED).run(
-                        stateMachine.transitionTo(NONE)
-                );
+                stateMachine.state(robotState, matchState).to(RobotState.DISABLED).transitionTo(NONE);
             }
         }
     }
